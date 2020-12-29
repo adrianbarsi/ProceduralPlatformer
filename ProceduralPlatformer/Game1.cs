@@ -8,26 +8,40 @@ namespace ProceduralPlatformer
     public class Game1 : Game
     {
         private GraphicsDeviceManager graphics;
-        public GraphicsDeviceManager Graphics { get => graphics; }
 
-        SpriteBatch spriteBatch;
+        private SpriteBatch spriteBatch;
+
         public SpriteBatch Sprite { get => spriteBatch; }
 
         private Vector2 stage;
         public Vector2 Stage { get => stage; set => stage = value; }
 
-        Player player;
+        private Player player;
 
-        CollisionDetection cd;
+        private CollisionDetection cd;
+        private Camera camera;
 
+        public Camera Camera { get => camera;  }
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
+        public void CameraBatchBegin()
+        {
+            Matrix viewMatrix = camera.GetViewMatrix();
+            spriteBatch.Begin(transformMatrix: viewMatrix);
+        }
+
+        public void CameraBatchEnd()
+        {
+            spriteBatch.End();
+        }
+
         protected override void Initialize()
         {
+            camera = new Camera(GraphicsDevice.Viewport);
             base.Initialize();
         }
 

@@ -28,7 +28,7 @@ namespace ProceduralPlatformer
 
         public override void Draw(GameTime gameTime)
         {
-            parent.Sprite.Begin();
+            parent.CameraBatchBegin();
             parent.Sprite.Draw(tex,
                 position,
                 srcRect,
@@ -38,8 +38,7 @@ namespace ProceduralPlatformer
                 1,
                 SpriteEffects.None,
                 0f);
-            parent.Sprite.End();
-            base.Draw(gameTime);
+            parent.CameraBatchEnd();
             base.Draw(gameTime);
         }
 
