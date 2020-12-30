@@ -1,12 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace ProceduralPlatformer
 {
     public class Game1 : Game
     {
+        private const int STARTING_POSITION_PLATFORM_OFFSET = 10;
+        private const int STARTING_POSITION_PLAYER_OFFSET = 11;
+
         private GraphicsDeviceManager graphics;
 
         private SpriteBatch spriteBatch;
@@ -22,6 +26,7 @@ namespace ProceduralPlatformer
         private Camera camera;
 
         public Camera Camera { get => camera;  }
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -51,15 +56,33 @@ namespace ProceduralPlatformer
 
             stage = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 
-            player = new Player(this, "images/player", new Vector2(stage.X / 2, stage.Y));
+            Texture2D playerTexture = Content.Load<Texture2D>("images/player");
+            Vector2 playerPosition = new Vector2(stage.X / 2, stage.Y - (playerTexture.Height / 2) - STARTING_POSITION_PLAYER_OFFSET - 1);
+            player = new Player(this, playerTexture, playerPosition);
 
             cd = new CollisionDetection(this, player);
 
             Platform platform;
 
-            for (int i = 60; i <= 400; i += 60)
+            Texture2D platformTexture = Content.Load<Texture2D>("images/platform");
+            platform = new Platform(this, platformTexture, new Vector2(stage.X / 2, stage.Y - (platformTexture.Height / 2) - STARTING_POSITION_PLATFORM_OFFSET));
+            cd.addPlatform(platform);
+            Components.Add(platform);
+
+            for (int i = 40; i <= 360; i += 60)
             {
-                platform = new Platform(this, "images/platform", new Vector2(i, i + 50));
+                platform = new Platform(this, platformTexture, new Vector2(i, i + 50));
+
+                cd.addPlatform(platform);
+
+                Components.Add(platform);
+            }
+
+            Random random = new Random();
+
+            for (int i = 50; i > -1000; i -= 80)
+            {
+                platform = new Platform(this, platformTexture, new Vector2(random.Next(0, 300), i));
 
                 cd.addPlatform(platform);
 

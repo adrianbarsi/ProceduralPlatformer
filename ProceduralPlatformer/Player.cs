@@ -11,7 +11,7 @@ namespace ProceduralPlatformer
 {
     public class Player : DrawableGameComponent
     {
-        Game1 parent;
+        private Game1 parent;
         private Vector2 position;
         public Vector2 Position { get => position; set => position = value; }
         private Texture2D tex;
@@ -29,12 +29,12 @@ namespace ProceduralPlatformer
         private bool falling = false;
         private readonly Vector2 gravity = new Vector2(0, 525);
 
-        public Player(Game game, string imageName, Vector2 position) : base(game)
+        public Player(Game game, Texture2D tex, Vector2 position) : base(game)
         {
             parent = (Game1)game;
+            this.tex = tex;
             this.position = position;
 
-            this.tex = parent.Content.Load<Texture2D>(imageName);
             srcRect = new Rectangle(0, 0, tex.Width, tex.Height);
             origin = new Vector2(tex.Width / 2, tex.Height / 2);
         }
@@ -80,11 +80,6 @@ namespace ProceduralPlatformer
                 float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 velocity.Y += gravity.Y * elapsedTime;
                 position.Y += velocity.Y * elapsedTime;
-                
-                if (position.Y >= parent.Stage.Y - (tex.Height / 2))
-                {
-                    jumping = false;
-                }
             }
             else if(falling)
             {
@@ -93,8 +88,12 @@ namespace ProceduralPlatformer
                 position.Y += velocity.Y * elapsedTime;
             }
 
-            position.X = MathHelper.Clamp(position.X, tex.Width / 2, parent.Stage.X - (tex.Width / 2));
-            position.Y = MathHelper.Clamp(position.Y, tex.Height / 2, parent.Stage.Y - (tex.Height / 2));
+            float playerCenterDelta = position.Y - (parent.Stage.Y / 2);
+
+            if(playerCenterDelta < 0)
+            {
+                parent.Camera.Position = new Vector2(parent.Camera.Position.X, position.Y - parent.Stage.Y + (parent.Stage.Y / 2));
+            }
 
             base.Update(gameTime);
         }

@@ -82,14 +82,7 @@ namespace ProceduralPlatformer
 
             if(!intersected)
             {
-                if (playerRect.Center.Y >= parent.Stage.Y - (playerRect.Height / 2))
-                {
-                    player.StopFalling();
-                }
-                else
-                {
-                    player.StartFalling();
-                }
+                player.StartFalling();
             }
 
             base.Update(gameTime);

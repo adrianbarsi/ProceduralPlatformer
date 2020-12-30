@@ -16,10 +16,10 @@ namespace ProceduralPlatformer
         private Rectangle srcRect;
         private Vector2 origin;
 
-        public Platform(Game game, string imageName, Vector2 position) : base(game)
+        public Platform(Game game, Texture2D tex, Vector2 position) : base(game)
         {
             parent = (Game1)game;
-            tex = parent.Content.Load<Texture2D>(imageName);
+            this.tex = tex;
             this.position = position;
 
             srcRect = new Rectangle(0, 0, tex.Width, tex.Height);
