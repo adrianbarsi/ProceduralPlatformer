@@ -9,7 +9,8 @@ namespace ProceduralPlatformer
 {
     public class CollisionDetection : GameComponent
     {
-        const int RECTANGLE_SIDE_OFFSET = 1;
+        private const int RECTANGLE_SIDE_OFFSET = 1;
+        private const int HORIZONTAL_BOUND_OFFSET = 5;
 
         private Game1 parent;
         private Player player;
@@ -45,11 +46,14 @@ namespace ProceduralPlatformer
 
             foreach (var platform in platforms)
             {
+                // platform rectangle above actual platform
                 Rectangle platformRect = platform.GetBound();
                 if (platformRect.Intersects(playerRect))
                 {
                     // Landing on the platform
-                    if(platformRect.Intersects(playerBottomRect))
+                    // If it sinks too deep and the bottom rectangle is below the platform but the right and left are still in
+                    // If only one side made it inside then we need to check if the player is inside the platform instead of on the edge
+                    if(platformRect.Intersects(playerBottomRect) || (!platformRect.Intersects(playerTopRect) && platformRect.Intersects(playerRightRect) && platformRect.Intersects(playerLeftRect)) || (!platformRect.Intersects(playerTopRect) && playerRect.Right > (platformRect.Left + HORIZONTAL_BOUND_OFFSET) && playerRect.Left < (platformRect.Right - HORIZONTAL_BOUND_OFFSET)))
                     {
                         player.StopJumping();
                         player.StopFalling();
@@ -63,7 +67,7 @@ namespace ProceduralPlatformer
                         player.Position = new Vector2(player.Position.X, platformRect.Bottom + (playerRect.Height / 2));
                     }
                     // Coming from the left
-                    else if(platformRect.Intersects(playerRightRect))
+                    else if (platformRect.Intersects(playerRightRect))
                     {
                         player.StopJumping();
                         player.StartFalling();

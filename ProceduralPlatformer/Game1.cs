@@ -56,15 +56,15 @@ namespace ProceduralPlatformer
 
             stage = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 
-            Texture2D playerTexture = Content.Load<Texture2D>("images/player");
-            Vector2 playerPosition = new Vector2(stage.X / 2, stage.Y - (playerTexture.Height / 2) - STARTING_POSITION_PLAYER_OFFSET - 1);
-            player = new Player(this, playerTexture, playerPosition);
-
-            cd = new CollisionDetection(this, player);
-
             Platform platform;
 
             Texture2D platformTexture = Content.Load<Texture2D>("images/platform");
+
+            Texture2D playerTexture = Content.Load<Texture2D>("images/player");
+            Vector2 playerPosition = new Vector2(stage.X / 2, stage.Y - (playerTexture.Height / 2) - platformTexture.Height - STARTING_POSITION_PLAYER_OFFSET);
+            player = new Player(this, playerTexture, playerPosition);
+            cd = new CollisionDetection(this, player);
+
             platform = new Platform(this, platformTexture, new Vector2(stage.X / 2, stage.Y - (platformTexture.Height / 2) - STARTING_POSITION_PLATFORM_OFFSET));
             cd.addPlatform(platform);
             Components.Add(platform);

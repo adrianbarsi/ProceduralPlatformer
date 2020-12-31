@@ -27,6 +27,7 @@ namespace ProceduralPlatformer
         private Vector2 velocity;
         private bool jumping = false;
         private bool falling = false;
+        private Vector2 originalCameraPosition;
         private readonly Vector2 gravity = new Vector2(0, 525);
 
         public Player(Game game, Texture2D tex, Vector2 position) : base(game)
@@ -37,6 +38,7 @@ namespace ProceduralPlatformer
 
             srcRect = new Rectangle(0, 0, tex.Width, tex.Height);
             origin = new Vector2(tex.Width / 2, tex.Height / 2);
+            originalCameraPosition = parent.Camera.Position;
         }
 
         public override void Draw(GameTime gameTime)
@@ -75,13 +77,7 @@ namespace ProceduralPlatformer
                 }
             }
 
-            if(jumping)
-            {
-                float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                velocity.Y += gravity.Y * elapsedTime;
-                position.Y += velocity.Y * elapsedTime;
-            }
-            else if(falling)
+            if(jumping || falling)
             {
                 float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 velocity.Y += gravity.Y * elapsedTime;
@@ -92,7 +88,11 @@ namespace ProceduralPlatformer
 
             if(playerCenterDelta < 0)
             {
-                parent.Camera.Position = new Vector2(parent.Camera.Position.X, position.Y - parent.Stage.Y + (parent.Stage.Y / 2));
+                parent.Camera.Position = new Vector2(parent.Camera.Position.X, position.Y - (parent.Stage.Y / 2));
+            }
+            else
+            {
+                parent.Camera.Position = originalCameraPosition;
             }
 
             base.Update(gameTime);
