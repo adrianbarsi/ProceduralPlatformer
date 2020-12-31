@@ -11,6 +11,9 @@ namespace ProceduralPlatformer
         private const int STARTING_POSITION_PLATFORM_OFFSET = 10;
         private const int STARTING_POSITION_PLAYER_OFFSET = 11;
 
+        public float SCORE_HORIZONTAL_OFFSET = 10;
+        public float SCORE_VERTICAL_OFFSET = 10;
+
         private GraphicsDeviceManager graphics;
 
         private SpriteBatch spriteBatch;
@@ -24,6 +27,7 @@ namespace ProceduralPlatformer
 
         private CollisionDetection cd;
         private Camera camera;
+        private SpriteFont scoreFont;
 
         public Camera Camera { get => camera;  }
 
@@ -52,6 +56,8 @@ namespace ProceduralPlatformer
 
         protected override void LoadContent()
         {
+            scoreFont = Content.Load<SpriteFont>("Fonts/score");
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             graphics.PreferredBackBufferWidth = 600;  // set this value to the desired width of your window
@@ -100,6 +106,10 @@ namespace ProceduralPlatformer
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
+
+            CameraBatchBegin();
+            spriteBatch.DrawString(scoreFont, player.HighScore.ToString(), new Vector2(SCORE_HORIZONTAL_OFFSET, SCORE_VERTICAL_OFFSET + camera.Position.Y), Color.Red);
+            CameraBatchEnd();
 
             base.Draw(gameTime);
         }

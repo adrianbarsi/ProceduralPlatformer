@@ -13,9 +13,13 @@ namespace ProceduralPlatformer
     {
         private Game1 parent;
         private Vector2 position;
+        private Vector2 originalPosition;
         public Vector2 Position { get => position; set => position = value; }
         private Texture2D tex;
         public Texture2D Tex { get => tex; }
+        private float highScore = 0;
+        public float HighScore { get => highScore; set => highScore = value; }
+
         private Rectangle srcRect;
         private Vector2 origin;
 
@@ -35,6 +39,7 @@ namespace ProceduralPlatformer
             parent = (Game1)game;
             this.tex = tex;
             this.position = position;
+            originalPosition = position;
 
             srcRect = new Rectangle(0, 0, tex.Width, tex.Height);
             origin = new Vector2(tex.Width / 2, tex.Height / 2);
@@ -55,6 +60,11 @@ namespace ProceduralPlatformer
                 0f);
             parent.CameraBatchEnd();
             base.Draw(gameTime);
+        }
+
+        private float calculateHighScore(float originalPosition, float newPosition)
+        {
+            return (float)Math.Floor((originalPosition - newPosition) / 2);
         }
 
         public override void Update(GameTime gameTime)
@@ -103,6 +113,11 @@ namespace ProceduralPlatformer
             if(position.X > parent.Stage.X)
             {
                 position.X = tex.Width / 2;
+            }
+
+            if(calculateHighScore(originalPosition.Y, position.Y) > highScore)
+            {
+                highScore = calculateHighScore(originalPosition.Y, position.Y);
             }
 
             base.Update(gameTime);
