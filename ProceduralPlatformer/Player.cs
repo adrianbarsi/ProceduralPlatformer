@@ -95,6 +95,16 @@ namespace ProceduralPlatformer
                 parent.Camera.Position = originalCameraPosition;
             }
 
+            if(position.X < 0)
+            {
+                position.X = parent.Stage.X - (tex.Width / 2);
+            }
+
+            if(position.X > parent.Stage.X)
+            {
+                position.X = tex.Width / 2;
+            }
+
             base.Update(gameTime);
         }
 

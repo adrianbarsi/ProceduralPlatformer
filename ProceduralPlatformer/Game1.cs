@@ -54,6 +54,10 @@ namespace ProceduralPlatformer
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            graphics.PreferredBackBufferWidth = 600;  // set this value to the desired width of your window
+            graphics.PreferredBackBufferHeight = 800;   // set this value to the desired height of your window
+            graphics.ApplyChanges();
+
             stage = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 
             Platform platform;
@@ -69,20 +73,11 @@ namespace ProceduralPlatformer
             cd.addPlatform(platform);
             Components.Add(platform);
 
-            for (int i = 40; i <= 360; i += 60)
-            {
-                platform = new Platform(this, platformTexture, new Vector2(i, i + 50));
-
-                cd.addPlatform(platform);
-
-                Components.Add(platform);
-            }
-
             Random random = new Random();
 
-            for (int i = 50; i > -1000; i -= 80)
+            for (int i = (int)stage.Y - 80; i > -1000; i -= 80)
             {
-                platform = new Platform(this, platformTexture, new Vector2(random.Next(0, 300), i));
+                platform = new Platform(this, platformTexture, new Vector2(random.Next(platformTexture.Width / 2, (int)stage.X - (platformTexture.Width / 2)), i));
 
                 cd.addPlatform(platform);
 
@@ -92,10 +87,6 @@ namespace ProceduralPlatformer
             Components.Add(player);
 
             Components.Add(cd);
-        }
-
-        protected override void UnloadContent()
-        {
         }
 
         protected override void Update(GameTime gameTime)
