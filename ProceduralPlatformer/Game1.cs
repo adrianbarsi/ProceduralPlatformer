@@ -133,10 +133,6 @@ namespace ProceduralPlatformer
         {
             GraphicsDevice.Clear(Color.White);
 
-            CameraBatchBegin();
-            spriteBatch.DrawString(scoreFont, player.HighScore.ToString(), new Vector2(SCORE_HORIZONTAL_OFFSET, SCORE_VERTICAL_OFFSET + camera.Position.Y), Color.Red);
-            CameraBatchEnd();
-
             base.Draw(gameTime);
         }
     }

@@ -19,8 +19,6 @@ namespace ProceduralPlatformer
         public Texture2D Tex { get => tex; }
         private float maxDistance = 0;
         public float MaxDistance { get => maxDistance; set => maxDistance = value; }
-        private float highScore;
-        public float HighScore { get => highScore; set => highScore = value; }
 
         private Rectangle srcRect;
         private Vector2 origin;
@@ -115,7 +113,6 @@ namespace ProceduralPlatformer
             if(originalPosition.Y - position.Y > maxDistance)
             {
                 maxDistance = originalPosition.Y - position.Y;
-                highScore = (float)Math.Floor(maxDistance / 2);
             }
 
             base.Update(gameTime);
