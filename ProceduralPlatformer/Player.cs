@@ -17,9 +17,9 @@ namespace ProceduralPlatformer
         public Vector2 Position { get => position; set => position = value; }
         private Texture2D tex;
         public Texture2D Tex { get => tex; }
-        private float maxPosition = 0;
-        public float MaxPosition { get => maxPosition; set => maxPosition = value; }
-        private float highScore = 0;
+        private float maxDistance = 0;
+        public float MaxDistance { get => maxDistance; set => maxDistance = value; }
+        private float highScore;
         public float HighScore { get => highScore; set => highScore = value; }
 
         private Rectangle srcRect;
@@ -112,10 +112,10 @@ namespace ProceduralPlatformer
                 position.X = tex.Width / 2;
             }
 
-            if(originalPosition.Y - position.Y > maxPosition)
+            if(originalPosition.Y - position.Y > maxDistance)
             {
-                maxPosition = originalPosition.Y - position.Y;
-                highScore = (float)Math.Floor(maxPosition / 2);
+                maxDistance = originalPosition.Y - position.Y;
+                highScore = (float)Math.Floor(maxDistance / 2);
             }
 
             base.Update(gameTime);

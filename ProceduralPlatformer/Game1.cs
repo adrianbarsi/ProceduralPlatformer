@@ -34,6 +34,8 @@ namespace ProceduralPlatformer
         private Camera camera;
         private SpriteFont scoreFont;
 
+        private float nextRenderPosition;
+
         public Camera Camera { get => camera;  }
 
         public Game1()
@@ -59,13 +61,13 @@ namespace ProceduralPlatformer
             base.Initialize();
         }
 
-        private void GeneratePlatforms(int startingPosition, int upperBound)
+        private void GeneratePlatforms(int startPosition, int endPosition)
         {
             Random random = new Random();
 
             Platform platform;
 
-            for (int i = startingPosition - PLATFORM_VERTICAL_OFFSET; i > upperBound; i -= PLATFORM_VERTICAL_OFFSET)
+            for (int i = startPosition; i > endPosition; i -= PLATFORM_VERTICAL_OFFSET)
             {
                 platform = new Platform(this, platformTexture, new Vector2(random.Next(platformTexture.Width / 2, (int)stage.X - (platformTexture.Width / 2)), i));
 
@@ -85,7 +87,9 @@ namespace ProceduralPlatformer
 
             stage = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 
-            scoreFont = Content.Load<SpriteFont>("Fonts/score");
+            nextRenderPosition = stage.Y / 2;
+
+            scoreFont = Content.Load<SpriteFont>("fonts/score");
             platformTexture = Content.Load<Texture2D>("images/platform");
             playerTexture = Content.Load<Texture2D>("images/player");
             
@@ -98,7 +102,7 @@ namespace ProceduralPlatformer
             cd.addPlatform(startingPlatform);
             Components.Add(startingPlatform);
 
-            GeneratePlatforms((int)stage.Y, 0);
+            GeneratePlatforms((int)stage.Y - PLATFORM_VERTICAL_OFFSET, 0);
 
             Components.Add(player);
 
@@ -109,6 +113,14 @@ namespace ProceduralPlatformer
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            if(nextRenderPosition >= (stage.Y - player.MaxDistance))
+            {
+                int startPosition = (int)nextRenderPosition - (int)(stage.Y / 2);
+                int endPosition = startPosition - (int)stage.Y;
+                GeneratePlatforms(startPosition, endPosition);
+                nextRenderPosition -= stage.Y;
+            }
 
             base.Update(gameTime);
         }
