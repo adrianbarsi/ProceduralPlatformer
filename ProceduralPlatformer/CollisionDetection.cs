@@ -16,10 +16,9 @@ namespace ProceduralPlatformer
         private Player player;
         private List<Platform> platforms;
 
-        public CollisionDetection(Game game, Player player) : base(game)
+        public CollisionDetection(Game game) : base(game)
         {
             parent = (Game1)game;
-            this.player = player;
             platforms = new List<Platform>();
         }
 
@@ -28,7 +27,15 @@ namespace ProceduralPlatformer
             base.Initialize();
         }
 
-        public void addPlatform(Platform platform)
+        public void AddPlayer(Player player)
+        {
+            if(this.player == null)
+            {
+                this.player = player;
+            }
+        }
+
+        public void AddPlatform(Platform platform)
         {
             platforms.Add(platform);
         }

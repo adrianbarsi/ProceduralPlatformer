@@ -35,6 +35,7 @@ namespace ProceduralPlatformer
         private SpriteFont scoreFont;
 
         private float nextRenderPosition;
+        private Platform startingPlatform;
 
         public Camera Camera { get => camera;  }
 
@@ -71,7 +72,7 @@ namespace ProceduralPlatformer
             {
                 platform = new Platform(this, platformTexture, new Vector2(random.Next(platformTexture.Width / 2, (int)stage.X - (platformTexture.Width / 2)), i));
 
-                cd.addPlatform(platform);
+                cd.AddPlatform(platform);
 
                 Components.Add(platform);
             }
@@ -92,19 +93,19 @@ namespace ProceduralPlatformer
             scoreFont = Content.Load<SpriteFont>("fonts/score");
             platformTexture = Content.Load<Texture2D>("images/platform");
             playerTexture = Content.Load<Texture2D>("images/player");
-            
+
+            cd = new CollisionDetection(this);
+
             Vector2 playerPosition = new Vector2(stage.X / 2, stage.Y - (playerTexture.Height / 2) - platformTexture.Height - STARTING_POSITION_PLAYER_OFFSET);
             player = new Player(this, playerTexture, playerPosition);
-            cd = new CollisionDetection(this, player);
+            cd.AddPlayer(player);
+            Components.Add(player);
 
-            Platform startingPlatform;
             startingPlatform = new Platform(this, platformTexture, new Vector2(stage.X / 2, stage.Y - (platformTexture.Height / 2) - STARTING_POSITION_PLATFORM_OFFSET));
-            cd.addPlatform(startingPlatform);
+            cd.AddPlatform(startingPlatform);
             Components.Add(startingPlatform);
 
             GeneratePlatforms((int)stage.Y - PLATFORM_VERTICAL_OFFSET, 0);
-
-            Components.Add(player);
 
             Components.Add(cd);
         }
