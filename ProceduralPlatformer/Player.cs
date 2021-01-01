@@ -17,6 +17,8 @@ namespace ProceduralPlatformer
         public Vector2 Position { get => position; set => position = value; }
         private Texture2D tex;
         public Texture2D Tex { get => tex; }
+        private float maxPosition = 0;
+        public float MaxPosition { get => maxPosition; set => maxPosition = value; }
         private float highScore = 0;
         public float HighScore { get => highScore; set => highScore = value; }
 
@@ -60,11 +62,6 @@ namespace ProceduralPlatformer
                 0f);
             parent.CameraBatchEnd();
             base.Draw(gameTime);
-        }
-
-        private float calculateHighScore(float originalPosition, float newPosition)
-        {
-            return (float)Math.Floor((originalPosition - newPosition) / 2);
         }
 
         public override void Update(GameTime gameTime)
@@ -115,9 +112,10 @@ namespace ProceduralPlatformer
                 position.X = tex.Width / 2;
             }
 
-            if(calculateHighScore(originalPosition.Y, position.Y) > highScore)
+            if(originalPosition.Y - position.Y > maxPosition)
             {
-                highScore = calculateHighScore(originalPosition.Y, position.Y);
+                maxPosition = originalPosition.Y - position.Y;
+                highScore = (float)Math.Floor(maxPosition / 2);
             }
 
             base.Update(gameTime);

@@ -11,8 +11,10 @@ namespace ProceduralPlatformer
         private const int STARTING_POSITION_PLATFORM_OFFSET = 10;
         private const int STARTING_POSITION_PLAYER_OFFSET = 11;
 
-        public float SCORE_HORIZONTAL_OFFSET = 10;
-        public float SCORE_VERTICAL_OFFSET = 10;
+        private const float SCORE_HORIZONTAL_OFFSET = 10;
+        private const float SCORE_VERTICAL_OFFSET = 10;
+
+        private const int PLATFORM_VERTICAL_OFFSET = 80;
 
         private GraphicsDeviceManager graphics;
 
@@ -21,6 +23,9 @@ namespace ProceduralPlatformer
         public SpriteBatch Sprite { get => spriteBatch; }
 
         private Vector2 stage;
+        private Texture2D platformTexture;
+        private Texture2D playerTexture;
+
         public Vector2 Stage { get => stage; set => stage = value; }
 
         private Player player;
@@ -54,34 +59,13 @@ namespace ProceduralPlatformer
             base.Initialize();
         }
 
-        protected override void LoadContent()
+        private void GeneratePlatforms(int startingPosition, int upperBound)
         {
-            scoreFont = Content.Load<SpriteFont>("Fonts/score");
-
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            graphics.PreferredBackBufferWidth = 600;  // set this value to the desired width of your window
-            graphics.PreferredBackBufferHeight = 800;   // set this value to the desired height of your window
-            graphics.ApplyChanges();
-
-            stage = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            Random random = new Random();
 
             Platform platform;
 
-            Texture2D platformTexture = Content.Load<Texture2D>("images/platform");
-
-            Texture2D playerTexture = Content.Load<Texture2D>("images/player");
-            Vector2 playerPosition = new Vector2(stage.X / 2, stage.Y - (playerTexture.Height / 2) - platformTexture.Height - STARTING_POSITION_PLAYER_OFFSET);
-            player = new Player(this, playerTexture, playerPosition);
-            cd = new CollisionDetection(this, player);
-
-            platform = new Platform(this, platformTexture, new Vector2(stage.X / 2, stage.Y - (platformTexture.Height / 2) - STARTING_POSITION_PLATFORM_OFFSET));
-            cd.addPlatform(platform);
-            Components.Add(platform);
-
-            Random random = new Random();
-
-            for (int i = (int)stage.Y - 80; i > -1000; i -= 80)
+            for (int i = startingPosition - PLATFORM_VERTICAL_OFFSET; i > upperBound; i -= PLATFORM_VERTICAL_OFFSET)
             {
                 platform = new Platform(this, platformTexture, new Vector2(random.Next(platformTexture.Width / 2, (int)stage.X - (platformTexture.Width / 2)), i));
 
@@ -89,6 +73,32 @@ namespace ProceduralPlatformer
 
                 Components.Add(platform);
             }
+        }
+
+        protected override void LoadContent()
+        {
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            graphics.PreferredBackBufferWidth = 600;
+            graphics.PreferredBackBufferHeight = 800;
+            graphics.ApplyChanges();
+
+            stage = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+
+            scoreFont = Content.Load<SpriteFont>("Fonts/score");
+            platformTexture = Content.Load<Texture2D>("images/platform");
+            playerTexture = Content.Load<Texture2D>("images/player");
+            
+            Vector2 playerPosition = new Vector2(stage.X / 2, stage.Y - (playerTexture.Height / 2) - platformTexture.Height - STARTING_POSITION_PLAYER_OFFSET);
+            player = new Player(this, playerTexture, playerPosition);
+            cd = new CollisionDetection(this, player);
+
+            Platform startingPlatform;
+            startingPlatform = new Platform(this, platformTexture, new Vector2(stage.X / 2, stage.Y - (platformTexture.Height / 2) - STARTING_POSITION_PLATFORM_OFFSET));
+            cd.addPlatform(startingPlatform);
+            Components.Add(startingPlatform);
+
+            GeneratePlatforms((int)stage.Y, 0);
 
             Components.Add(player);
 
