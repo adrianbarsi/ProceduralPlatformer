@@ -115,6 +115,9 @@ namespace ProceduralPlatformer
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (player.Position.Y - (player.Tex.Height / 2) > stage.Y)
+                Exit();
+
             if(nextRenderPosition >= (stage.Y - player.MaxDistance))
             {
                 int startPosition = (int)nextRenderPosition - (int)(stage.Y / 2);
